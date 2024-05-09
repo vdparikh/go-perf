@@ -1,0 +1,7 @@
+cpu.out
+profiling.test
+trace.out
+certs/*.key
+certs/*.crt
+certs/*.csr
+certs/*.srl
