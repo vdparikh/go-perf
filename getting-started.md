@@ -464,6 +464,55 @@ func main() {
 }
 ```
 
+With Go 1.21, Structured logging comes natively without using external library. 
+log/slog
+
+
+```go
+package main
+
+import (
+    "log"
+    "log/slog"
+)
+
+func main() {
+    // INFO level by default but you can customize it for lower level messages
+    // You can use AddSource: true in handler options and that will add the function, file and line from where the log was generated
+    opts := &slog.HandlerOptions{
+        Level: slog.LevelDebug,
+        AddSource: true,
+    }
+
+    
+
+    logger := slog.New(slog.NewJSONHandler(os.Stdout, opts))
+    // logger := slog.New(slog.NewTextHandler(os.Stdout, opts))
+
+    logger.Debug("Debug message")
+    logger.Info("Info message")
+    logger.Warn("Warning message")
+    logger.Error("Error message")
+
+    // You can also customize the default Logger is to utilize the slog.SetDefault() method, allowing you to replace the default logger with a custom one.
+    slog.SetDefault(logger)
+    slog.Info("Info message")
+    log.Println("Hello from Log")
+
+    // You can also provide additional context about the logged event, which can be valuable for tasks such as troubleshooting, generating metrics, auditing, and various other purposes
+    logger.Info(
+        "some request",
+        "method", "GET",
+        "time_taken_ms", 100,
+        slog.Int("time_taken_ms", 158),
+        "path", "/encrypt",
+        "status", 200,
+        "user_agent", "UA_AGENT",
+    )
+}
+
+```
+
 ### Panic and Recover
 
 `panic` and `recover` are built-in functions that handle unexpected errors in Go. `panic` stops the ordinary flow of execution and begins panicking, whereas `recover` can regain control of a panicking goroutine.
